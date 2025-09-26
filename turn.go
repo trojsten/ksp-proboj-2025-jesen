@@ -268,6 +268,8 @@ func (t ShootTurnData) Execute(m *Map, p *Player) error {
 
 	destination.Health -= ShipShootDamage
 	if destination.Health < 0 {
+		NewAsteroidFromShip(m, destination, FuelAsteroid)
+		NewAsteroidFromShip(m, destination, RockAsteroid)
 		m.Ships[destination.ID] = nil
 	}
 

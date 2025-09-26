@@ -32,3 +32,12 @@ func RandomPosition(m *Map) Position {
 		rand.Float64()*m.Radius*2 - m.Radius,
 	}
 }
+
+func RandomOffsetPosition(original Position, maxOffset float64) Position {
+	angle := rand.Float64() * 2 * math.Pi
+	distance := rand.Float64() * maxOffset
+	return Position{
+		original.X + distance*math.Cos(angle),
+		original.Y + distance*math.Sin(angle),
+	}
+}

@@ -20,6 +20,8 @@ const (
 	ShipShootDamage        = 25
 	ShipRepairDistance     = 50
 	ShipRepairAmount       = 30
+	MaterialToSurfaceRatio = 10.0
+	AsteroidSpawnOffset    = 5.0
 )
 
 func ShipRockPrice(t ShipType) int {

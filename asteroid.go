@@ -1,6 +1,9 @@
 package main
 
-import "math/rand"
+import (
+	"math"
+	"math/rand"
+)
 
 type AsteroidType int
 
@@ -23,6 +26,27 @@ func NewAsteroid(m *Map) *Asteroid {
 		Position: RandomPosition(m),
 		Type:     AsteroidType(rand.Intn(2)),
 		Size:     RandomFloat(MinAsteroidSize, MaxAsteroidSize),
+	}
+
+	m.Asteroids = append(m.Asteroids, a)
+	return a
+}
+
+func NewAsteroidFromShip(m *Map, ship *Ship, asteroidType AsteroidType) *Asteroid {
+	var materialAmount float64
+	if asteroidType == FuelAsteroid {
+		materialAmount = ship.Fuel
+	} else {
+		materialAmount = float64(ship.Rock)
+	}
+
+	size := math.Sqrt(materialAmount / MaterialToSurfaceRatio / math.Pi)
+
+	a := &Asteroid{
+		ID:       len(m.Asteroids),
+		Position: RandomOffsetPosition(ship.Position, AsteroidSpawnOffset),
+		Type:     asteroidType,
+		Size:     size,
 	}
 
 	m.Asteroids = append(m.Asteroids, a)
