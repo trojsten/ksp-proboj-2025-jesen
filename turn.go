@@ -38,6 +38,10 @@ func ParseTurnData(container TurnContainer) (Turn, error) {
 		var turn SiphonTurnData
 		err := json.Unmarshal(container.Data, &turn)
 		return turn, err
+	case ShootTurn:
+		var turn ShootTurnData
+		err := json.Unmarshal(container.Data, &turn)
+		return turn, err
 	}
 
 	return nil, fmt.Errorf("unknown turn type: %v", container.Type)
@@ -193,6 +197,47 @@ func (t SiphonTurnData) Execute(m *Map, p *Player) error {
 
 	source.Fuel -= float64(t.Amount)
 	destination.Fuel += float64(t.Amount)
+
+	return nil
+}
+
+type ShootTurnData struct {
+	SourceID      int `json:"source_id"`
+	DestinationID int `json:"destination_id"`
+}
+
+func (t ShootTurnData) Execute(m *Map, p *Player) error {
+	if t.SourceID < 0 || t.SourceID >= len(m.Ships) {
+		return fmt.Errorf("invalid source ship id: %v", t.SourceID)
+	}
+	if t.DestinationID < 0 || t.DestinationID >= len(m.Ships) {
+		return fmt.Errorf("invalid destination ship id: %v", t.DestinationID)
+	}
+
+	source := m.Ships[t.SourceID]
+	destination := m.Ships[t.DestinationID]
+
+	if source.PlayerID != p.ID {
+		return fmt.Errorf("source ship %v does not belong to player %v", t.SourceID, p.ID)
+	}
+
+	if source.Type != BattleShip {
+		return fmt.Errorf("source ship %v is not a BattleShip", t.SourceID)
+	}
+
+	if destination.Type == MotherShip {
+		return fmt.Errorf("mothership is invincible")
+	}
+
+	distance := source.Position.Distance(destination.Position)
+	if distance > ShipShootDistance {
+		return fmt.Errorf("ships too far apart for shooting: %v > %v", distance, ShipShootDistance)
+	}
+
+	destination.Health -= ShipShootDamage
+	if destination.Health < 0 {
+		m.Ships[destination.ID] = nil
+	}
 
 	return nil
 }
