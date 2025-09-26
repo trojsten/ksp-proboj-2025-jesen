@@ -3,28 +3,28 @@ package main
 import "math/rand"
 
 const (
-	Radius                          = 15000
-	MaxAsteroidSize                 = 50
-	MinAsteroidSize                 = MaxAsteroidSize / 2
-	AsteroidCount                   = 500
-	WormholeCount                   = 25
-	ShipMaxHealth                   = 100
-	ShipStartFuel                   = 100
-	PlayerStartFuel                 = 1000
-	PlayerStartRock                 = 1000
-	ShipMovementFree                = 1.0
-	ShipMovementMultiplier          = 1.0
-	ShipMovementMaxSize             = 10000
-	ShipTransferDistance            = 20
-	ShipShootDistance               = 100
-	ShipShootDamage                 = 25
-	ShipRepairDistance              = 50
-	ShipRepairAmount                = 30
-	MaterialToSurfaceRatio          = 10.0
-	AsteroidSpawnOffset             = 5.0
-	GlobalAsteroidMovementScale     = 2.0
-	IndividualAsteroidMovementScale = 1.0
-	PerlinNoiseScale                = 0.01
+	Radius                          = 15000               // Game map radius
+	MaxAsteroidSize                 = 50                  // Maximum size of generated asteroids
+	MinAsteroidSize                 = MaxAsteroidSize / 2 // Minimum size of generated asteroids
+	AsteroidCount                   = 500                 // Number of generated asteroids in the game
+	WormholeCount                   = 25                  // Number of generated wormhole pairs in the game
+	ShipMaxHealth                   = 100                 // Maximum health points for ships
+	ShipStartFuel                   = 100                 // Starting fuel for new ships
+	PlayerStartFuel                 = 1000                // Starting fuel for players
+	PlayerStartRock                 = 1000                // Starting rock resources for players
+	ShipMovementFree                = 1.0                 // Free movement distance before fuel cost
+	ShipMovementMultiplier          = 1.0                 // Fuel cost multiplier for movement delta beyond free range
+	ShipMovementMaxSize             = 10000               // Maximum movement delta per turn - larger movements are scaled down
+	ShipTransferDistance            = 20                  // Maximum distance for resource transfer between ships
+	ShipShootDistance               = 100                 // Maximum shooting range for ships
+	ShipShootDamage                 = 25                  // Damage dealt by ship weapons
+	ShipRepairDistance              = 50                  // Maximum distance for ship repair operations
+	ShipRepairAmount                = 30                  // Health points restored by repair
+	MaterialToSurfaceRatio          = 10.0                // Ratio of material to surface area for asteroids
+	AsteroidSpawnOffset             = 5.0                 // Offset distance for asteroid spawning after ship death
+	GlobalAsteroidMovementScale     = 2.0                 // Global scale factor for asteroid movement
+	IndividualAsteroidMovementScale = 1.0                 // Individual asteroid movement scale factor
+	PerlinNoiseScale                = 0.01                // Scale factor for Perlin noise generation
 )
 
 func ShipRockPrice(t ShipType) int {
