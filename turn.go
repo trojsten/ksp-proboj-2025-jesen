@@ -260,6 +260,12 @@ func (t ShootTurnData) Execute(m *Map, p *Player) error {
 		return fmt.Errorf("ships too far apart for shooting: %v > %v", distance, ShipShootDistance)
 	}
 
+	destinationPlayer := m.Players[destination.PlayerID]
+	distanceToMothership := destination.Position.Distance(destinationPlayer.MotherShip.Position)
+	if distanceToMothership <= ShipRepairDistance {
+		return fmt.Errorf("destination ship is protected near its mothership: %v <= %v", distanceToMothership, ShipRepairDistance)
+	}
+
 	destination.Health -= ShipShootDamage
 	if destination.Health < 0 {
 		m.Ships[destination.ID] = nil
