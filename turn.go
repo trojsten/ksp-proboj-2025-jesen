@@ -13,6 +13,7 @@ const (
 	LoadTurn
 	SiphonTurn
 	ShootTurn
+	RepairTurn
 )
 
 type TurnContainer struct {
@@ -40,6 +41,10 @@ func ParseTurnData(container TurnContainer) (Turn, error) {
 		return turn, err
 	case ShootTurn:
 		var turn ShootTurnData
+		err := json.Unmarshal(container.Data, &turn)
+		return turn, err
+	case RepairTurn:
+		var turn RepairTurnData
 		err := json.Unmarshal(container.Data, &turn)
 		return turn, err
 	}
@@ -258,6 +263,36 @@ func (t ShootTurnData) Execute(m *Map, p *Player) error {
 	destination.Health -= ShipShootDamage
 	if destination.Health < 0 {
 		m.Ships[destination.ID] = nil
+	}
+
+	return nil
+}
+
+type RepairTurnData struct {
+	ShipID int `json:"ship_id"`
+}
+
+func (t RepairTurnData) Execute(m *Map, p *Player) error {
+	if t.ShipID < 0 || t.ShipID >= len(m.Ships) {
+		return fmt.Errorf("invalid ship id: %v", t.ShipID)
+	}
+
+	ship := m.Ships[t.ShipID]
+	if ship == nil {
+		return fmt.Errorf("ship %v has been destroyed", t.ShipID)
+	}
+	if ship.PlayerID != p.ID {
+		return fmt.Errorf("ship %v does not belong to player %v", t.ShipID, p.ID)
+	}
+
+	distance := ship.Position.Distance(p.MotherShip.Position)
+	if distance > ShipRepairDistance {
+		return fmt.Errorf("ship too far from mothership for repair: %v > %v", distance, ShipRepairDistance)
+	}
+
+	ship.Health += ShipRepairAmount
+	if ship.Health > ShipMaxHealth {
+		ship.Health = ShipMaxHealth
 	}
 
 	return nil

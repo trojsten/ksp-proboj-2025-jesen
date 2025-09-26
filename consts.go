@@ -18,6 +18,8 @@ const (
 	ShipTransferDistance   = 20
 	ShipShootDistance      = 100
 	ShipShootDamage        = 25
+	ShipRepairDistance     = 50
+	ShipRepairAmount       = 30
 )
 
 func ShipRockPrice(t ShipType) int {
