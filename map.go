@@ -1,0 +1,35 @@
+package main
+
+import "github.com/trojsten/ksp-proboj/client"
+
+type Map struct {
+	Radius    float64        `json:"radius"`
+	Ships     []*Ship        `json:"ships"`
+	Asteroids []*Asteroid    `json:"asteroids"`
+	Wormholes []*Wormhole    `json:"wormholes"`
+	Players   []*Player      `json:"players"`
+	runner    *client.Runner `json:"-"`
+	Round     int            `json:"round"`
+}
+
+func NewMap() *Map {
+	m := &Map{Radius: Radius}
+
+	for range AsteroidCount {
+		NewAsteroid(m)
+	}
+
+	for range WormholeCount {
+		NewWormholes(m)
+	}
+
+	return m
+}
+
+func (m *Map) ShouldContinue() bool {
+	return m.Round <= 1000
+}
+
+func (m *Map) Tick() {
+	m.Round++
+}
