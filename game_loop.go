@@ -58,4 +58,7 @@ func TickPlayerShips(m *Map, p *Player) {
 			ship.Position = ship.Position.Add(ship.Vector)
 		}
 	}
+
+	// Check for wormhole teleportation after all ships have moved
+	CheckWormholeTeleportation(m)
 }
