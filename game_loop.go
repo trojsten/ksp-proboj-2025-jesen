@@ -8,8 +8,17 @@ import (
 	"github.com/trojsten/ksp-proboj/client"
 )
 
+type GameState struct {
+	Map      *Map `json:"map"`
+	PlayerID int  `json:"player_id"`
+}
+
 func GameStateFor(m *Map, p *Player) string {
-	data, err := json.Marshal(m)
+	state := GameState{
+		Map:      m,
+		PlayerID: p.ID,
+	}
+	data, err := json.Marshal(state)
 	if err != nil {
 		panic(err)
 	}
