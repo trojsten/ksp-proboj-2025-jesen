@@ -13,6 +13,10 @@ type GameState struct {
 	PlayerID int  `json:"player_id"`
 }
 
+type ObserverGameState struct {
+	Map *Map `json:"map"`
+}
+
 func GameStateFor(m *Map, p *Player) string {
 	state := GameState{
 		Map:      m,
@@ -24,6 +28,15 @@ func GameStateFor(m *Map, p *Player) string {
 	}
 
 	return string(data)
+}
+
+func StateForObserver(m *Map) string {
+	data, err := json.Marshal(m)
+	if err != nil {
+		panic(err)
+	}
+
+	return string(data) + "\n"
 }
 
 func GameTick(m *Map) {
@@ -62,6 +75,12 @@ func GameTick(m *Map) {
 	}
 
 	m.Tick()
+
+	observerState := StateForObserver(m)
+	resp := m.runner.ToObserver(observerState)
+	if resp != client.Ok {
+		m.runner.Log(fmt.Sprintf("unexpected result of TO OBSERVER operation: %v", resp))
+	}
 }
 
 func TickPlayerShips(m *Map, p *Player) {

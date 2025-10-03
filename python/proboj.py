@@ -228,7 +228,6 @@ class GameMap:
     def _update_from_dict(self, data: Dict[str, Any]) -> None:
         self.radius = data["radius"]
         self.round = data["round"]
-        self.my_player_id = data["my_player_id"]
         self._update_ships(data["ships"])
         self._update_asteroids(data["asteroids"])
         self._update_wormholes(data["wormholes"])
@@ -338,6 +337,10 @@ class Client:
         self.game_map: Optional[GameMap] = None
         self.my_player_id: Optional[int] = None
 
+    def log(self, *args, **kwargs):
+        kwargs["file"] = sys.stderr
+        print(*args, **kwargs)
+
     def load_game_state(self, json_data: str) -> None:
         data = json.loads(json_data)
 
@@ -380,21 +383,12 @@ class Client:
         return []
 
     def run(self) -> None:
-        try:
-            while True:
-                line = input()
-                if not line:
-                    continue
+        while True:
+            line = input()
+            assert input() == "."
 
-                self.load_game_state(line)
-                turns = self.turn()
-                turns_data = [turn.to_dict() for turn in turns]
-                print(json.dumps(turns_data), flush=True)
-
-        except EOFError:
-            pass
-        except KeyboardInterrupt:
-            pass
-        except Exception as e:
-            print(f"Error: {e}", file=sys.stderr)
-            sys.exit(1)
+            self.load_game_state(line)
+            turns = self.turn()
+            turns_data = [turn.to_dict() for turn in turns]
+            print(json.dumps(turns_data), flush=True)
+            print(".", flush=True)

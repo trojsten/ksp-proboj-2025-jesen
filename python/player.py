@@ -1,5 +1,6 @@
+#!/bin/python3
 from typing import List
-from .proboj import (
+from proboj import (
     Client,
     BuyTurn,
     MoveTurn,
@@ -56,4 +57,3 @@ class MyClient(Client):
 if __name__ == "__main__":
     client = MyClient()
     client.run()
-
