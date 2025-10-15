@@ -22,6 +22,10 @@ class SpaceGameObserver {
         this.dataManager.selectEntityAt(x, y);
     }
 
+    deselectEntity() {
+        this.dataManager.deselectEntity();
+    }
+
     animate() {
         this.camera.update();
 

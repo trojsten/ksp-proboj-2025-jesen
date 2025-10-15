@@ -6,8 +6,14 @@ class InputHandler {
         this.mouse = {
             isDown: false,
             lastX: 0,
-            lastY: 0
+            lastY: 0,
+            startX: 0,
+            startY: 0,
+            hasDragged: false
         };
+
+        // Drag detection threshold (in pixels)
+        this.dragThreshold = 5;
 
         this.setupEventListeners();
     }
@@ -19,7 +25,6 @@ class InputHandler {
         this.canvas.addEventListener('mousemove', (e) => this.onMouseMove(e));
         this.canvas.addEventListener('mouseup', (e) => this.onMouseUp(e));
         this.canvas.addEventListener('wheel', (e) => this.onWheel(e));
-        this.canvas.addEventListener('click', (e) => this.onClick(e));
 
         this.canvas.addEventListener('touchstart', (e) => this.onTouchStart(e));
         this.canvas.addEventListener('touchmove', (e) => this.onTouchMove(e));
@@ -54,6 +59,9 @@ class InputHandler {
         this.mouse.isDown = true;
         this.mouse.lastX = e.clientX;
         this.mouse.lastY = e.clientY;
+        this.mouse.startX = e.clientX;
+        this.mouse.startY = e.clientY;
+        this.mouse.hasDragged = false;
     }
 
     onMouseMove(e) {
@@ -67,11 +75,35 @@ class InputHandler {
 
             this.mouse.lastX = e.clientX;
             this.mouse.lastY = e.clientY;
+
+            // Check if this movement constitutes a drag
+            const totalDeltaX = e.clientX - this.mouse.startX;
+            const totalDeltaY = e.clientY - this.mouse.startY;
+            const totalDistance = Math.sqrt(totalDeltaX * totalDeltaX + totalDeltaY * totalDeltaY);
+
+            if (totalDistance >= this.dragThreshold) {
+                this.mouse.hasDragged = true;
+            }
         }
     }
 
     onMouseUp(e) {
         this.mouse.isDown = false;
+
+        // Only select entities if this was a genuine click (not a drag)
+        if (!this.mouse.hasDragged) {
+            const rect = this.canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const worldX = (x - this.canvas.width / 2) / this.camera.zoom + this.camera.x;
+            const worldY = (y - this.canvas.height / 2) / this.camera.zoom + this.camera.y;
+
+            this.observer.selectEntityAt(worldX, worldY);
+        }
+
+        // Reset drag state for next interaction
+        this.mouse.hasDragged = false;
     }
 
     onWheel(e) {
@@ -79,17 +111,7 @@ class InputHandler {
         this.camera.handleWheel(e.deltaY);
     }
 
-    onClick(e) {
-        const rect = this.canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        const worldX = (x - this.canvas.width / 2) / this.camera.zoom + this.camera.x;
-        const worldY = (y - this.canvas.height / 2) / this.camera.zoom + this.camera.y;
-
-        this.observer.selectEntityAt(worldX, worldY);
-    }
-
+    
     onTouchStart(e) {
         e.preventDefault();
         if (e.touches.length === 1) {
@@ -97,6 +119,9 @@ class InputHandler {
             this.mouse.isDown = true;
             this.mouse.lastX = touch.clientX;
             this.mouse.lastY = touch.clientY;
+            this.mouse.startX = touch.clientX;
+            this.mouse.startY = touch.clientY;
+            this.mouse.hasDragged = false;
         }
     }
 
@@ -111,12 +136,35 @@ class InputHandler {
 
             this.mouse.lastX = touch.clientX;
             this.mouse.lastY = touch.clientY;
+
+            // Check if this movement constitutes a drag
+            const totalDeltaX = touch.clientX - this.mouse.startX;
+            const totalDeltaY = touch.clientY - this.mouse.startY;
+            const totalDistance = Math.sqrt(totalDeltaX * totalDeltaX + totalDeltaY * totalDeltaY);
+
+            if (totalDistance >= this.dragThreshold) {
+                this.mouse.hasDragged = true;
+            }
         }
     }
 
     onTouchEnd(e) {
         e.preventDefault();
+
+        // Only select entities if this was a genuine touch (not a drag)
+        if (!this.mouse.hasDragged && this.mouse.isDown) {
+            const rect = this.canvas.getBoundingClientRect();
+            const x = this.mouse.lastX - rect.left;
+            const y = this.mouse.lastY - rect.top;
+
+            const worldX = (x - this.canvas.width / 2) / this.camera.zoom + this.camera.x;
+            const worldY = (y - this.canvas.height / 2) / this.camera.zoom + this.camera.y;
+
+            this.observer.selectEntityAt(worldX, worldY);
+        }
+
         this.mouse.isDown = false;
+        this.mouse.hasDragged = false;
     }
 
     updateCoordinates(e) {
@@ -148,6 +196,12 @@ class InputHandler {
     }
 
     onKeyDown(e) {
+        // Handle Escape key for deselection
+        if (e.key === 'Escape' || e.key === 'Esc') {
+            this.observer.deselectEntity();
+            return;
+        }
+
         // Handle timeline controls if timeline manager exists
         if (this.observer.timelineManager) {
             this.observer.timelineManager.handleKeyDown(e);

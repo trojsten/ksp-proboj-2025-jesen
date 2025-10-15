@@ -133,43 +133,52 @@ class GameDataManager {
         });
     }
 
+    deselectEntity() {
+        this.selectedEntity = null;
+        this.updateEntityInfo();
+    }
+
     selectEntityAt(x, y) {
         const currentGameData = this.getCurrentGameData();
         if (!currentGameData) return;
 
-        this.selectedEntity = null;
+        // Don't immediately deselect - check if there's an entity to select first
+        let foundEntity = null;
 
         for (const ship of currentGameData.ships) {
             if (ship === null) continue;
             const dist = Math.sqrt((ship.position.x - x) ** 2 + (ship.position.y - y) ** 2);
             if (dist < 50) {
-                this.selectedEntity = { type: 'ship', id: ship.id };
+                foundEntity = { type: 'ship', id: ship.id };
                 break;
             }
         }
 
-        if (!this.selectedEntity) {
+        if (!foundEntity) {
             for (const asteroid of currentGameData.asteroids) {
                 if (asteroid === null) continue;
                 const dist = Math.sqrt((asteroid.position.x - x) ** 2 + (asteroid.position.y - y) ** 2);
                 if (dist < asteroid.size + 10) {
-                    this.selectedEntity = { type: 'asteroid', id: asteroid.id };
+                    foundEntity = { type: 'asteroid', id: asteroid.id };
                     break;
                 }
             }
         }
 
-        if (!this.selectedEntity) {
+        if (!foundEntity) {
             for (const wormhole of currentGameData.wormholes) {
                 if (wormhole === null) continue;
                 const dist = Math.sqrt((wormhole.position.x - x) ** 2 + (wormhole.position.y - y) ** 2);
                 if (dist < 30) {
-                    this.selectedEntity = { type: 'wormhole', id: wormhole.id };
+                    foundEntity = { type: 'wormhole', id: wormhole.id };
                     break;
                 }
             }
         }
 
+        // Only update selection if we found something or if we're clicking on empty space
+        // This prevents accidental deselection during camera panning
+        this.selectedEntity = foundEntity;
         this.updateEntityInfo();
     }
 
