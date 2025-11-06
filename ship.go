@@ -41,9 +41,18 @@ func NewShip(m *Map, p *Player, shipType ShipType) *Ship {
 }
 
 func DestroyShip(m *Map, ship *Ship) {
-	if ship == nil || ship.IsDestroyed {
+	if ship == nil {
 		return
 	}
+
+	// Prevent double destruction - check both flags
+	if ship.IsDestroyed && ship.Health <= 0 {
+		return
+	}
+
+	// Log destruction event for debugging
+	m.runner.Log(fmt.Sprintf("Destroying ship %d (player %d, type %d, health: %d)",
+		ship.ID, ship.PlayerID, ship.Type, ship.Health))
 
 	ship.IsDestroyed = true
 	ship.Health = 0
@@ -56,6 +65,8 @@ func DestroyShip(m *Map, ship *Ship) {
 func CheckAndMarkDestroyedShips(m *Map) {
 	for _, ship := range m.Ships {
 		if ship != nil && !ship.IsDestroyed && ship.Health <= 0 {
+			m.runner.Log(fmt.Sprintf("CheckAndMarkDestroyedShips: Ship %d (player %d) has %d health, marking for destruction",
+				ship.ID, ship.PlayerID, ship.Health))
 			DestroyShip(m, ship)
 		}
 	}
@@ -67,6 +78,9 @@ func ValidateShipOperable(ship *Ship) error {
 	}
 	if ship.IsDestroyed {
 		return fmt.Errorf("ship is destroyed")
+	}
+	if ship.Health <= 0 {
+		return fmt.Errorf("ship has 0 health")
 	}
 	return nil
 }

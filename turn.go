@@ -279,8 +279,15 @@ func (t ShootTurnData) Execute(m *Map, p *Player) error {
 		return fmt.Errorf("source ship %v: %v", t.SourceID, err)
 	}
 	destination := m.Ships[t.DestinationID]
-	if err := ValidateShipOperable(destination); err != nil {
-		return fmt.Errorf("destination ship %v: %v", t.DestinationID, err)
+	// Additional validation for target - prevent shooting at ships that are already destroyed or at 0 HP
+	if destination == nil {
+		return fmt.Errorf("destination ship %v does not exist", t.DestinationID)
+	}
+	if destination.IsDestroyed {
+		return fmt.Errorf("destination ship %v is already destroyed", t.DestinationID)
+	}
+	if destination.Health <= 0 {
+		return fmt.Errorf("destination ship %v already has 0 health", t.DestinationID)
 	}
 
 	if source.PlayerID != p.ID {
@@ -308,7 +315,12 @@ func (t ShootTurnData) Execute(m *Map, p *Player) error {
 
 	destination.Health -= ShipShootDamage
 	if destination.Health <= 0 {
-		DestroyShip(m, destination)
+		// Only destroy if not already destroyed to prevent double destruction
+		if !destination.IsDestroyed {
+			DestroyShip(m, destination)
+		} else {
+			m.runner.Log(fmt.Sprintf("Ship %d already destroyed, skipping destruction", destination.ID))
+		}
 	}
 
 	return nil

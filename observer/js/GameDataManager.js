@@ -57,7 +57,60 @@ class GameDataManager {
     }
 
     getCurrentGameData() {
-        return this.gameStates[this.currentFrame] || null;
+        const gameData = this.gameStates[this.currentFrame] || null;
+
+        // Validate game data to prevent observer freezing
+        if (gameData && !this.validateGameData(gameData)) {
+            console.error(`Invalid game state detected at frame ${this.currentFrame}, attempting to skip to next valid frame`);
+            return this.findNextValidFrame();
+        }
+
+        return gameData;
+    }
+
+    // Validate game state to detect corrupted data
+    validateGameData(gameData) {
+        if (!gameData) return false;
+
+        // Check for required properties
+        if (!gameData.ships || !Array.isArray(gameData.ships)) {
+            return false;
+        }
+
+        // Validate ships array for invalid entries
+        try {
+            for (const ship of gameData.ships) {
+                if (ship && (ship.health === undefined || ship.position === undefined || ship.player === undefined)) {
+                    console.warn("Invalid ship data detected:", ship);
+                    return false;
+                }
+            }
+        } catch (error) {
+            console.error("Error validating ships array:", error);
+            return false;
+        }
+
+        return true;
+    }
+
+    // Find the next valid frame when current frame is corrupted
+    findNextValidFrame() {
+        for (let i = this.currentFrame + 1; i < this.gameStates.length; i++) {
+            if (this.validateGameData(this.gameStates[i])) {
+                console.log(`Found valid frame at index ${i}, skipping corrupted frames`);
+                this.currentFrame = i;
+                return this.gameStates[i];
+            }
+        }
+
+        // If no valid frame found, return empty state to prevent freezing
+        console.error("No valid frames found after corruption, returning empty state");
+        return {
+            ships: [],
+            asteroids: [],
+            wormholes: [],
+            players: []
+        };
     }
 
     nextFrame() {
