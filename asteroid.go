@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math"
 	"math/rand"
 )
@@ -94,10 +95,14 @@ func MineAsteroid(m *Map, ship *Ship, asteroid *Asteroid) {
 		materialToRemove = currentMaterial
 	}
 
+	m.runner.Log(fmt.Sprintf("mining asteroid: %v, type %v, by %v", asteroid.ID, asteroid.Type, materialToRemove))
+
 	if asteroid.Type == FuelAsteroid {
 		ship.Fuel += materialToRemove
 	} else {
+		m.runner.Log(fmt.Sprintf("old ship rock %v", ship.Rock))
 		ship.Rock += int(materialToRemove)
+		m.runner.Log(fmt.Sprintf("new ship rock %v", ship.Rock))
 	}
 
 	newMaterial := currentMaterial - materialToRemove
