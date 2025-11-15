@@ -259,7 +259,7 @@ class GameDataManager {
                 html += `<span class="entity-detail">HP: ${data.health}</span>`;
                 html += `<span class="entity-detail">Fuel: ${data.fuel}</span>`;
                 html += `<span class="entity-detail">Type: ${this.getShipTypeName(data.type)}</span>`;
-                html += `<span class="entity-detail">Cargo: ${data.cargo}</span>`;
+                html += `<span class="entity-detail">Rock: ${data.rock}</span>`;
                 break;
             case 'asteroid':
                 html += `<span class="entity-detail">Pos: (${Math.round(data.position.x)}, ${Math.round(data.position.y)})</span>`;
