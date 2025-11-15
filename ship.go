@@ -79,7 +79,7 @@ func ValidateShipOperable(ship *Ship) error {
 	if ship.IsDestroyed {
 		return fmt.Errorf("ship is destroyed")
 	}
-	if ship.Health <= 0 {
+	if ship.Health <= 0 && ship.Type != MotherShip {
 		return fmt.Errorf("ship has 0 health")
 	}
 	return nil
