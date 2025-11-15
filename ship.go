@@ -41,7 +41,7 @@ func NewShip(m *Map, p *Player, shipType ShipType) *Ship {
 }
 
 func DestroyShip(m *Map, ship *Ship) {
-	if ship == nil || ship.Type == ShipType(0) {
+	if ship == nil {
 		return
 	}
 
@@ -64,7 +64,7 @@ func DestroyShip(m *Map, ship *Ship) {
 
 func CheckAndMarkDestroyedShips(m *Map) {
 	for _, ship := range m.Ships {
-		if ship != nil && !ship.IsDestroyed && ship.Health <= 0 {
+		if ship != nil && !ship.IsDestroyed && ship.Health <= 0 && ship.Type == MotherShip {
 			m.runner.Log(fmt.Sprintf("CheckAndMarkDestroyedShips: Ship %d (player %d) has %d health, marking for destruction",
 				ship.ID, ship.PlayerID, ship.Health))
 			DestroyShip(m, ship)
