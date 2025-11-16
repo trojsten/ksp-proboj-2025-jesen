@@ -112,6 +112,10 @@ class Renderer {
 
     renderWormholes() {
         this.gameData.wormholes.forEach(wormhole => {
+            if (!wormhole || wormhole.position === undefined || wormhole.id === undefined) {
+                return;
+            }
+
             const pos = this.camera.worldToScreen(wormhole.position.x, wormhole.position.y);
 
             const connected = this.gameData.wormholes.find(w =>
@@ -151,6 +155,10 @@ class Renderer {
 
     renderAsteroids() {
         this.gameData.asteroids.forEach(asteroid => {
+            if (!asteroid || asteroid.position === undefined || asteroid.size === undefined) {
+                return;
+            }
+
             const pos = this.camera.worldToScreen(asteroid.position.x, asteroid.position.y);
             const radius = asteroid.size * this.camera.zoom;
 

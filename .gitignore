@@ -3,3 +3,6 @@ __pycache__/
 /server_linux
 /game
 .idea/
+
+*.gz
+*.json

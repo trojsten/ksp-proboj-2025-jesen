@@ -4,6 +4,8 @@ class GameDataManager {
         this.gameStates = [];
         this.currentFrame = 0;
         this.selectedEntity = null;
+        // Game constants for calculations
+        this.MATERIAL_TO_SURFACE_RATIO = 1.0;
     }
 
     async loadGameData() {
@@ -264,6 +266,9 @@ class GameDataManager {
             case 'asteroid':
                 html += `<span class="entity-detail">Pos: (${Math.round(data.position.x)}, ${Math.round(data.position.y)})</span>`;
                 html += `<span class="entity-detail">Size: ${data.size.toFixed(2)}</span>`;
+                // Calculate material using the formula: Material = Size² × π × MaterialToSurfaceRatio
+                const material = Math.pow(data.size, 2) * Math.PI * this.MATERIAL_TO_SURFACE_RATIO;
+                html += `<span class="entity-detail">Material: ${material.toFixed(2)}</span>`;
                 html += `<span class="entity-detail">Type: ${data.type}</span>`;
                 if (data.owner_id !== undefined && data.owner_id !== -1) {
                     html += `<span class="entity-detail">Owner: P${data.owner_id + 1}</span>`;
