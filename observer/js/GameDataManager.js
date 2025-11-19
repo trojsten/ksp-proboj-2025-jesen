@@ -159,8 +159,8 @@ class GameDataManager {
             }
 
             // Update rock and fuel
-            document.getElementById(`p${playerNum}Rock`).textContent = player.rock;
-            document.getElementById(`p${playerNum}Fuel`).textContent = player.fuel;
+            document.getElementById(`p${playerNum}Rock`).textContent = player.mothership.rock;
+            document.getElementById(`p${playerNum}Fuel`).textContent = player.mothership.fuel;
 
             // Count ships for this player
             const playerShips = currentGameData.ships.filter(s => s.player === player.id);

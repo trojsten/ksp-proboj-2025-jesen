@@ -94,17 +94,17 @@ func (t BuyTurnData) Execute(m *Map, p *Player) error {
 	}
 
 	price := ShipRockPrice(t.Type)
-	if p.RockAmount < price {
-		return fmt.Errorf("not enough rocks in mothership: needed %v, has %v", price, p.RockAmount)
+	if p.MotherShip.Rock < price {
+		return fmt.Errorf("not enough rocks in mothership: needed %v, has %v", price, p.MotherShip.Rock)
 	}
 
 	// Check if player has enough fuel for new ship
-	if p.FuelAmount < ShipStartFuel {
-		return fmt.Errorf("insufficient fuel for new ship: needed %v, has %v", ShipStartFuel, p.FuelAmount)
+	if p.MotherShip.Fuel < ShipStartFuel {
+		return fmt.Errorf("insufficient fuel for new ship: needed %v, has %v", ShipStartFuel, p.MotherShip.Fuel)
 	}
 
-	p.RockAmount -= price
-	p.FuelAmount -= ShipStartFuel
+	p.MotherShip.Rock -= price
+	p.MotherShip.Fuel -= ShipStartFuel
 	NewShip(m, p, t.Type)
 	return nil
 }
@@ -142,10 +142,10 @@ func (t MoveTurnData) Execute(m *Map, p *Player) error {
 
 	// Mothership uses player fuel, other ships use their own fuel
 	if ship.Type == MotherShip {
-		if p.FuelAmount < int(fuelCost) {
-			return fmt.Errorf("insufficient fuel for mothership: needed %v, has %v", fuelCost, p.FuelAmount)
+		if p.MotherShip.Fuel < fuelCost {
+			return fmt.Errorf("insufficient fuel for mothership: needed %v, has %v", fuelCost, p.MotherShip.Fuel)
 		}
-		p.FuelAmount -= int(fuelCost)
+		p.MotherShip.Fuel -= fuelCost
 	} else {
 		if ship.Fuel < fuelCost {
 			return fmt.Errorf("insufficient fuel for ship: needed %v, has %v", fuelCost, ship.Fuel)
@@ -359,12 +359,12 @@ func (t RepairTurnData) Execute(m *Map, p *Player) error {
 	}
 
 	// Check if player has enough rock for repair
-	if p.RockAmount < ShipRepairRockCost {
-		return fmt.Errorf("insufficient rock for repair: needed %v, has %v", ShipRepairRockCost, p.RockAmount)
+	if p.MotherShip.Rock < ShipRepairRockCost {
+		return fmt.Errorf("insufficient rock for repair: needed %v, has %v", ShipRepairRockCost, p.MotherShip.Rock)
 	}
 
 	// Deduct rock cost
-	p.RockAmount -= ShipRepairRockCost
+	p.MotherShip.Rock -= ShipRepairRockCost
 
 	ship.Health += ShipRepairAmount
 	if ship.Health > ShipMaxHealth {

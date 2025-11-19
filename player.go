@@ -4,20 +4,16 @@ type Player struct {
 	ID         int    `json:"id"`
 	Name       string `json:"name"`
 	Color      string `json:"color"`
-	RockAmount int    `json:"rock"`
-	FuelAmount int    `json:"fuel"`
-	MotherShip *Ship  `json:"-"`
+	MotherShip *Ship  `json:"mothership"`
 	Alive      bool   `json:"alive"`
 }
 
 func NewPlayer(m *Map, name string) *Player {
 	p := &Player{
-		ID:         len(m.Players),
-		Name:       name,
-		Color:      "white",
-		RockAmount: PlayerStartRock,
-		FuelAmount: PlayerStartFuel,
-		Alive:      true,
+		ID:    len(m.Players),
+		Name:  name,
+		Color: "white",
+		Alive: true,
 	}
 
 	s := &Ship{
@@ -25,6 +21,8 @@ func NewPlayer(m *Map, name string) *Player {
 		PlayerID: p.ID,
 		Position: RandomPosition(m),
 		Type:     MotherShip,
+		Rock:     PlayerStartRock,
+		Fuel:     PlayerStartFuel,
 	}
 	p.MotherShip = s
 
