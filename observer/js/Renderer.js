@@ -183,7 +183,7 @@ class Renderer {
             }
 
             const pos = this.camera.worldToScreen(ship.position.x, ship.position.y);
-            const size = 150 * this.camera.zoom;
+            const size = 50 * this.camera.zoom;
 
             // Check if ship is destroyed - be more defensive about undefined values
             const isDestroyed = (ship.health === 0) || (ship.is_destroyed === true) || (ship.health <= 0);
@@ -267,7 +267,7 @@ class Renderer {
             this.ctx.fillStyle = isDestroyed ? '#aaaaaa' : '#ffffff';
             this.ctx.font = `${12 * this.camera.zoom}px Arial`;
             this.ctx.textAlign = 'center';
-            this.ctx.fillText(`P${ship.player + 1}`, pos.x, pos.y + 4 * this.camera.zoom);
+            this.ctx.fillText(`P${ship.player}`, pos.x, pos.y + 4 * this.camera.zoom);
 
             // Reset globalAlpha
             this.ctx.globalAlpha = 1.0;
@@ -302,6 +302,7 @@ class Renderer {
 
     drawMotherShip(size) {
         // Large hexagon shape for MotherShip
+        size *= 2
         this.ctx.beginPath();
         for (let i = 0; i < 6; i++) {
             const angle = (Math.PI / 3) * i;

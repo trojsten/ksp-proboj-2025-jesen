@@ -271,7 +271,7 @@ class GameDataManager {
 
         switch (type) {
             case 'ship':
-                html += `<span class="entity-detail">P${data.player + 1}</span>`;
+                html += `<span class="entity-detail">P${data.player}</span>`;
                 html += `<span class="entity-detail">Pos: (${Math.round(data.position.x)}, ${Math.round(data.position.y)})</span>`;
                 html += `<span class="entity-detail">HP: ${data.health}</span>`;
                 html += `<span class="entity-detail">Fuel: ${data.fuel}</span>`;
@@ -286,7 +286,7 @@ class GameDataManager {
                 html += `<span class="entity-detail">Material: ${material.toFixed(2)}</span>`;
                 html += `<span class="entity-detail">Type: ${data.type}</span>`;
                 if (data.owner_id !== undefined && data.owner_id !== -1) {
-                    html += `<span class="entity-detail">Owner: P${data.owner_id + 1}</span>`;
+                    html += `<span class="entity-detail">Owner: P${data.owner_id}</span>`;
                 }
                 if (data.surface !== undefined) {
                     html += `<span class="entity-detail">Surface: ${data.surface}</span>`;
