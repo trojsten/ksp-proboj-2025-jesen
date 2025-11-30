@@ -74,8 +74,6 @@ func RandomFloat(min, max float64) float64 {
 func AsteroidScore(a Asteroid) float64 {
 	asteroidSurface := float64(a.Size * a.Size * math.Pi)
 	ownedSurface := float64(a.OwnedSurface)
-
-	surfaceFactor := math.Pow(1.5, (ownedSurface/asteroidSurface)/9.0) * (a.Size / float64(MaxAsteroidSize))
-
-	return 100 + surfaceFactor
+	surfaceFactor := math.Pow(1.5, (ownedSurface/asteroidSurface*100)/9.0) * (a.Size / float64(MaxAsteroidSize))
+	return 50 + surfaceFactor
 }

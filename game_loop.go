@@ -41,6 +41,7 @@ func StateForObserver(m *Map) string {
 
 func GameTick(m *Map) {
 	m.UsedShips = make(map[int]map[int]bool)
+	m.runner.Log(fmt.Sprintf("Round %v", m.Round))
 
 	for _, player := range m.Players {
 		if !player.Alive {
