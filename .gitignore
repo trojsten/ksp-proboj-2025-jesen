@@ -4,6 +4,7 @@ __pycache__/
 /template.zip
 /game
 /bundle.zip
+/pipe/pipe_bridge
 .idea/
 
 *.gz

@@ -10,13 +10,18 @@
       "command": "./python/player.py",
       "language": "py"
     },
+    "pipe": {
+      "command": "./pipe/pipe_bridge /tmp/proboj_from /tmp/proboj_to",
+      "language": "pipe"
+    },
     "windows": {
       "command": "C:/absolutna/cesta/ku/python.exe ../python/player.py",
       "language": "py"
     }
   },
   "timeout": {
-    "py": 10
+    "py": 10,
+    "pipe": 1000000
   },
   "disable_gzip": true
 }
