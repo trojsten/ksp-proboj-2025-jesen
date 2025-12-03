@@ -5,7 +5,7 @@ class TimelineManager {
         this.isPlaying = false;
         this.isPaused = false;
         this.playInterval = null;
-        this.playSpeed = 1000; // milliseconds between frames
+        this.playSpeed = 50; // milliseconds between frames
         this.lastFrameTime = 0;
         this.frameAccumulator = 0;
 
