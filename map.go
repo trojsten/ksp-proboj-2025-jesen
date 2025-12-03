@@ -35,7 +35,7 @@ func NewMap() *Map {
 }
 
 func (m *Map) ShouldContinue() bool {
-	return m.Round <= 1000
+	return m.Round <= 2025
 }
 
 func (m *Map) Tick() {
