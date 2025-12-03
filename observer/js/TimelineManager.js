@@ -276,4 +276,12 @@ class TimelineManager {
     destroy() {
         this.pause();
     }
+
+    autoplay() {
+        // Start from frame 0 for consistent autoplay behavior
+        this.dataManager.setCurrentFrame(0);
+
+        // Start playback - will stop automatically at last frame
+        this.play();
+    }
 }

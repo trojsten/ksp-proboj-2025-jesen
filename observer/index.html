@@ -146,10 +146,11 @@
 
             checkUrlParameter() {
                 const urlParams = new URLSearchParams(window.location.search);
-                const filePath = urlParams.get('path');
+                const filePath = urlParams.get('file');
+                const autoplay = urlParams.get('autoplay');
 
                 if (filePath) {
-                    this.handleUrlLoad(filePath);
+                    this.handleUrlLoad(filePath, autoplay === '1'); // Pass autoplay flag
                 }
             }
 
@@ -172,7 +173,10 @@
                 }
             }
 
-            async handleUrlLoad(url) {
+            async handleUrlLoad(url, autoplay = false) {
+                // Store autoplay flag for later use
+                this.autoplayEnabled = autoplay;
+
                 this.showLoading(true);
                 this.hideError();
 
@@ -254,6 +258,11 @@
 
                 // Show the main interface
                 this.showMainInterface();
+
+                // Trigger autoplay if enabled (no edge case handling for single frame as requested)
+                if (this.autoplayEnabled) {
+                    this.triggerAutoplay();
+                }
             }
 
             showMainInterface() {
@@ -265,6 +274,20 @@
                 if (loadNewFileBtn) {
                     loadNewFileBtn.addEventListener('click', () => this.loadNewFile());
                 }
+            }
+
+            triggerAutoplay() {
+                // Small delay to ensure UI is fully rendered
+                setTimeout(() => {
+                    if (window.gameObserver && window.gameObserver.timelineManager) {
+                        const timelineManager = window.gameObserver.timelineManager;
+
+                        // Only autoplay if we have multiple frames
+                        if (timelineManager.getTotalFrames() > 1) {
+                            timelineManager.autoplay();
+                        }
+                    }
+                }, 100); // 100ms delay for UI stability
             }
 
             loadNewFile() {
