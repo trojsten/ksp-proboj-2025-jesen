@@ -12,7 +12,7 @@ class Camera {
     reset() {
         this.targetX = 0;
         this.targetY = 0;
-        this.targetZoom = 0.05;
+        this.targetZoom = 0.03;
     }
 
     zoomIn() {
