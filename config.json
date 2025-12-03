@@ -9,6 +9,10 @@
     "py2": {
       "command": "./python/player.py",
       "language": "py"
+    },
+    "windows": {
+      "command": "C:/absolutna/cesta/ku/python.exe ../python/player.py",
+      "language": "py"
     }
   },
   "timeout": {

@@ -5,7 +5,7 @@ observer_files != find observer -type f -print
 python_files != find python ! -path '*/__pycache__/*' -type f -print
 runner_v = 25.1005
 
-template.zip: $(servers) $(runners) config.json $(observer_files) $(python_files)
+template.zip: $(servers) $(runners) config.json games.json $(observer_files) $(python_files)
 	zip $@ $^
 
 bundle.zip: README.md
