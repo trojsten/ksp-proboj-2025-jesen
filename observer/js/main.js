@@ -1,4 +1,8 @@
 window.addEventListener('load', () => {
-    // Always create the observer
-    window.gameObserver = new SpaceGameObserver();
+    // Check for redirect URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectUrl = urlParams.get('back');
+
+    // Always create the observer with redirect URL
+    window.gameObserver = new SpaceGameObserver(redirectUrl);
 });

@@ -1,5 +1,5 @@
 class SpaceGameObserver {
-    constructor() {
+    constructor(redirectUrl = null) {
         this.canvas = document.getElementById('canvas');
         this.animationFrameId = null;
 
@@ -7,7 +7,7 @@ class SpaceGameObserver {
         this.dataManager = new GameDataManager(this);
         this.renderer = new Renderer(this.canvas, this.camera, this.dataManager.getGameData(), this.dataManager.getSelectedEntity(), this.dataManager);
         this.inputHandler = new InputHandler(this.canvas, this.camera, this);
-        this.timelineManager = new TimelineManager(this, this.dataManager);
+        this.timelineManager = new TimelineManager(this, this.dataManager, redirectUrl);
 
         this.init();
     }

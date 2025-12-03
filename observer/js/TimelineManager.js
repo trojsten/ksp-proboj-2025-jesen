@@ -1,7 +1,9 @@
 class TimelineManager {
-    constructor(observer, dataManager) {
+    constructor(observer, dataManager, redirectUrl = null) {
         this.observer = observer;
         this.dataManager = dataManager;
+        this.redirectUrl = redirectUrl;
+        this.redirectTriggered = false;
         this.isPlaying = false;
         this.isPaused = false;
         this.playInterval = null;
@@ -102,6 +104,11 @@ class TimelineManager {
     onFrameSliderChange(e) {
         const frame = parseInt(e.target.value);
         this.dataManager.setCurrentFrame(frame);
+
+        // Check if this is the last frame
+        if (frame === this.dataManager.getTotalFrames() - 1) {
+            this.handlePlaybackEnd();
+        }
     }
 
     onSpeedChange(e) {
@@ -140,6 +147,7 @@ class TimelineManager {
             } else {
                 // Reached the end, pause playback
                 this.pause();
+                this.handlePlaybackEnd();
             }
         }
     }
@@ -211,6 +219,11 @@ class TimelineManager {
         const currentFrame = this.dataManager.getCurrentFrame();
         if (currentFrame < this.dataManager.getTotalFrames() - 1) {
             this.dataManager.setCurrentFrame(currentFrame + 1);
+
+            // Check if this is now the last frame
+            if (currentFrame + 1 === this.dataManager.getTotalFrames() - 1) {
+                this.handlePlaybackEnd();
+            }
             return true;
         }
         return false;
@@ -232,6 +245,7 @@ class TimelineManager {
     lastFrame() {
         const totalFrames = this.dataManager.getTotalFrames();
         this.dataManager.setCurrentFrame(totalFrames - 1);
+        this.handlePlaybackEnd();
     }
 
     setFrame(frame) {
@@ -283,5 +297,14 @@ class TimelineManager {
 
         // Start playback - will stop automatically at last frame
         this.play();
+    }
+
+    handlePlaybackEnd() {
+        if (this.redirectUrl && !this.redirectTriggered) {
+            this.redirectTriggered = true;
+            setTimeout(() => {
+                window.location.href = this.redirectUrl;
+            }, 2000); // 2 second delay to show final frame
+        }
     }
 }

@@ -104,6 +104,7 @@
                 this.fileInput = document.getElementById('fileInput');
                 this.loadingText = document.getElementById('loadingText');
                 this.errorText = document.getElementById('errorText');
+                this.redirectUrl = null;
 
                 this.initEventListeners();
                 this.checkUrlParameter();
@@ -149,6 +150,11 @@
                 const urlParams = new URLSearchParams(window.location.search);
                 const filePath = urlParams.get('file');
                 const autoplay = urlParams.get('autoplay');
+                const backUrl = urlParams.get('back');
+
+                if (backUrl) {
+                    this.redirectUrl = backUrl;
+                }
 
                 if (filePath) {
                     this.handleUrlLoad(filePath, autoplay === '1'); // Pass autoplay flag
@@ -254,6 +260,16 @@
             initializeObserver(gameStates) {
                 // Update the existing observer with new data
                 if (window.gameObserver && window.gameObserver.dataManager) {
+                    window.gameObserver.dataManager.loadUploadedData(gameStates);
+
+                    // Update timeline manager with redirect URL if available
+                    if (this.redirectUrl && window.gameObserver.timelineManager) {
+                        window.gameObserver.timelineManager.redirectUrl = this.redirectUrl;
+                        window.gameObserver.timelineManager.redirectTriggered = false;
+                    }
+                } else {
+                    // Create new observer with redirect URL if no observer exists
+                    window.gameObserver = new SpaceGameObserver(this.redirectUrl);
                     window.gameObserver.dataManager.loadUploadedData(gameStates);
                 }
 
