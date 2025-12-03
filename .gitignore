@@ -1,6 +1,7 @@
 __pycache__/
-/runner_linux
-/server_linux
+/runner_*
+/server_*
+/template.zip
 /game
 .idea/
 
