@@ -21,7 +21,7 @@
   },
   "timeout": {
     "py": 10,
-    "pipe": 1000000
+    "pipe": 10
   },
   "disable_gzip": true
 }

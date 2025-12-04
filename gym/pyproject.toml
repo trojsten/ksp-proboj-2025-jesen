@@ -2,4 +2,8 @@
 name = "gym"
 version = "0.1.0"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "gymnasium>=1.2.2",
+    "pettingzoo>=1.25.0",
+    "stable-baselines3>=2.7.0",
+]

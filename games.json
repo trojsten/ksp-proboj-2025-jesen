@@ -2,7 +2,6 @@
   {
     "gamefolder": "game",
     "players": [
-      "py1",
       "pipe"
     ],
     "args": ""
