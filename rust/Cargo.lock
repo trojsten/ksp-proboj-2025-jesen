@@ -65,7 +65,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rust_bot"
+name = "rust"
 version = "0.1.0"
 dependencies = [
  "derive_more",

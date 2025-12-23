@@ -11,7 +11,7 @@
       "language": "py"
     },
     "rust": {
-        "command": "./rust_bot/target/debug/rust_bot",
+        "command": "./rust/target/debug/rust_bot",
         "language": "rs"
     },
     "windows": {

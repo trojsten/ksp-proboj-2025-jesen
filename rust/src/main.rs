@@ -1,4 +1,4 @@
-use rust_bot::proboj::*;
+use rust::proboj::*;
 
 fn main() {
     loop {
