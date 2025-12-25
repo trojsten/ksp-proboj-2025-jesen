@@ -193,3 +193,12 @@ ShipConqueringRate              = 10                      // Surface units conqu
 ## Čo odovzdávať?
 
 Stačí zazipovať súbory `player.py` a `proboj.py` **(nie priečinok!)**, prípadne ďalšie, ak si nejaké navyše vytvoril.
+
+## MacOS quickstart
+
+- Pusti `./runner_mac`, nezahoď, choď do settingov a povol nenotarizovanú appku [pozri návod](https://support.apple.com/en-us/102445)
+- Zopakuj pre `./server_mac`
+- V `config.json` zmeň `server_linux` na `server_mac`
+- Pusti `cargo build` aby si vyrobil binárku rustového hráča (alebo si ho daj preč z `games.json`)
+- Zmeň shebang line v python hráčovi na niečo ako `#!/opt/homebrew/bin/python3`
+- Profit
